@@ -10,6 +10,17 @@ public class Controller {
 
     public void execute() {
         inputView.readSchedule();
-        inputView.readWeekdayOrder();
+        readOnCallOrder();
+
+    }
+
+    private void readOnCallOrder() {
+        try {
+            inputView.readWeekdayOrder();
+            inputView.readWeekendOrder();
+        } catch (IllegalArgumentException e) {
+            outputView.printExceptionMessage(e.getMessage());
+            readOnCallOrder();
+        }
     }
 }
