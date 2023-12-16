@@ -4,8 +4,10 @@ package oncall.view;
 import camp.nextstep.edu.missionutils.Console;
 import oncall.domain.*;
 import oncall.validator.DateValidator;
+import oncall.view.constant.ExceptionMessage;
 
 import java.time.Month;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -62,7 +64,17 @@ public class InputView {
             }
             order.add(new Member(name));
         }
+        validateDuplication(input, order);
         return order;
+    }
+
+    private void validateDuplication(String[] input, Queue<Member> order) {
+        long distinctCount = Arrays.stream(input)
+                .distinct()
+                .count();
+        if (order.size() != distinctCount) {
+            throw new IllegalArgumentException(ExceptionMessage.DUPLICATED_NAME);
+        }
     }
 
 
