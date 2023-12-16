@@ -40,11 +40,8 @@ public class OnCallRepository {
         return lastDayOfWeek;
     }
 
-    public void updateLastDate() {
+    public void updateDate() {
         lastDay++;
-    }
-
-    public void updateLastDayOfWeek() {
         lastDayOfWeek = lastDayOfWeek.next();
     }
 

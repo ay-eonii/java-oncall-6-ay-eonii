@@ -31,8 +31,7 @@ public class OnCallService {
                 date = String.format(HOLIDAY_FORMAT, date);
             }
             dates.add(date);
-            repository.updateLastDayOfWeek();
-            repository.updateLastDate();
+            repository.updateDate();
         }
         return dates;
     }
