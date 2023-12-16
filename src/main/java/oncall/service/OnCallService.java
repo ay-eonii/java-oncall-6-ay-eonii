@@ -1,15 +1,14 @@
 package oncall.service;
 
 
-import oncall.domain.DayOfWeek;
-import oncall.domain.Holiday;
-import oncall.domain.Schedule;
+import oncall.domain.*;
 import oncall.domain.repository.OnCallReposiroty;
 
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class OnCallService {
     private static final String DATE_FORMAT = "%s월 %s일 %s";
@@ -40,4 +39,20 @@ public class OnCallService {
         }
         return dates;
     }
+
+    public List<String> getOnCall(List<String> dates, Map<Type, OnCall> onCallMap) {
+        List<String> onCall = new ArrayList<>();
+        for (String date : dates) {
+            Member member;
+            if (date.contains(" 토") || date.contains(" 일") || dates.contains("휴일")) {
+                member = onCallMap.get(Type.WEEKEND).getNextOnCall();
+                onCall.add(member.toString());
+                continue;
+            }
+            member = onCallMap.get(Type.WEEKDAY).getNextOnCall();
+            onCall.add(member.toString());
+        }
+        return onCall;
+    }
+
 }
