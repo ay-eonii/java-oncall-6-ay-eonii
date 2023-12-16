@@ -22,10 +22,21 @@ public enum DayOfWeek {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return korean;
+    }
+
+    public DayOfWeek next() {
+        return values()[(ordinal() + 1) % values().length];
+    }
+
     public static DayOfWeek match(String input) {
         return Arrays.stream(values())
                 .filter(value -> value.korean.equals(input))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(ExceptionMessage.INVALID_SCHEDULE));
     }
+
+
 }
