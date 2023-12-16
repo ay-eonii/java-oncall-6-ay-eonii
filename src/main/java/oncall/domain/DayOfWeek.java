@@ -26,6 +26,6 @@ public enum DayOfWeek {
         return Arrays.stream(values())
                 .filter(value -> value.korean.equals(input))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(ExceptionMessage.INVALID));
+                .orElseThrow(() -> new IllegalArgumentException(ExceptionMessage.INVALID_SCHEDULE));
     }
 }

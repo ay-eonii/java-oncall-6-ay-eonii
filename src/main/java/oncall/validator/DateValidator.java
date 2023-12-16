@@ -17,7 +17,7 @@ public class DateValidator {
             int month = Integer.parseInt(input);
             return Month.of(month);
         } catch (NumberFormatException | DateTimeException e) {
-            throw new IllegalArgumentException(ExceptionMessage.INVALID);
+            throw new IllegalArgumentException(ExceptionMessage.INVALID_SCHEDULE);
         }
     }
 
