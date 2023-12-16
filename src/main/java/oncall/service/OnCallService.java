@@ -55,4 +55,7 @@ public class OnCallService {
         return onCall;
     }
 
+    public void reset() {
+        repository.reset();
+    }
 }
