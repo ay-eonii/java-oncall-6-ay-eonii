@@ -10,4 +10,12 @@ public class Schedule {
         this.month = month;
         this.dayOfWeek = dayOfWeek;
     }
+
+    public Month getMonth() {
+        return month;
+    }
+
+    public DayOfWeek getDayOfWeek() {
+        return dayOfWeek;
+    }
 }
