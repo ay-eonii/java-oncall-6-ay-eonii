@@ -23,7 +23,7 @@ public enum Holiday {
 
     public static Holiday match(String input) {
         return Arrays.stream(values())
-                .filter(value -> value.date.equals(input))
+                .filter(value -> input.contains(value.date))
                 .findFirst()
                 .orElse(NONE);
     }
