@@ -1,26 +1,36 @@
 package oncall.controller;
 
 
+import oncall.domain.*;
+import oncall.service.OnCallService;
 import oncall.view.InputView;
 import oncall.view.OutputView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Controller {
     private final InputView inputView = new InputView();
     private final OutputView outputView = new OutputView();
+    private final OnCallService onCallService = new OnCallService();
 
     public void execute() {
-        inputView.readSchedule();
-        readOnCallOrder();
+        Schedule schedule = inputView.readSchedule();
+        Map<Type, OnCall> typeOnCallMap = readOnCallOrder();
 
     }
 
-    private void readOnCallOrder() {
+    private Map<Type, OnCall> readOnCallOrder() {
         try {
-            inputView.readWeekdayOrder();
-            inputView.readWeekendOrder();
+            WeekdayOnCall weekdayOnCall = inputView.readWeekdayOrder();
+            WeekEndOnCall weekEndOnCall = inputView.readWeekendOrder();
+            Map<Type, OnCall> onCall = new HashMap<>();
+            onCall.put(Type.WEEKDAY, weekdayOnCall);
+            onCall.put(Type.WEEKEND, weekEndOnCall);
+            return onCall;
         } catch (IllegalArgumentException e) {
             outputView.printExceptionMessage(e.getMessage());
-            readOnCallOrder();
+            return readOnCallOrder();
         }
     }
 }
