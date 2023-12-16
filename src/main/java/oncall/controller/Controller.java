@@ -7,6 +7,7 @@ import oncall.view.InputView;
 import oncall.view.OutputView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Controller {
@@ -17,7 +18,10 @@ public class Controller {
     public void execute() {
         Schedule schedule = inputView.readSchedule();
         Map<Type, OnCall> typeOnCallMap = readOnCallOrder();
-
+        List<String> date = onCallService.getDate(schedule);
+        List<String> onCall = onCallService.getOnCall(date, typeOnCallMap);
+        outputView.printOnCall(date, onCall);
+        onCallService.reset();
     }
 
     private Map<Type, OnCall> readOnCallOrder() {
