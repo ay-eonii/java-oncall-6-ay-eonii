@@ -2,19 +2,16 @@ package oncall.service;
 
 
 import oncall.domain.*;
-import oncall.domain.repository.OnCallReposiroty;
+import oncall.domain.repository.OnCallRepository;
 
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OnCallService {
     private static final String DATE_FORMAT = "%s월 %s일 %s";
     private static final String HOLIDAY_FORMAT = "%s(휴일)";
 
-    private final OnCallReposiroty repository = OnCallReposiroty.getInstance();
+    private final OnCallRepository repository = OnCallRepository.getInstance();
 
     public List<String> getDate(Schedule schedule) {
         Month month = schedule.getMonth();
@@ -35,24 +32,44 @@ public class OnCallService {
             }
             dates.add(date);
             repository.updateLastDayOfWeek();
-            repository.updateLastDay();
+            repository.updateLastDate();
         }
         return dates;
     }
 
     public List<String> getOnCall(List<String> dates, Map<Type, OnCall> onCallMap) {
-        List<String> onCall = new ArrayList<>();
+        List<String> onCall = new LinkedList<>();
+
         for (String date : dates) {
+            Type type = Type.of(date);
+
             Member member;
-            if (date.contains(" 토") || date.contains(" 일") || dates.contains("휴일")) {
-                member = onCallMap.get(Type.WEEKEND).getNextOnCall();
+            if (repository.hasSkipMember(type)) {
+                member = repository.getSkipMember(type);
                 onCall.add(member.toString());
+                repository.resetSkipMember(type);
                 continue;
             }
-            member = onCallMap.get(Type.WEEKDAY).getNextOnCall();
+
+            member = onCallMap.get(type).getNextOnCall();
+
+            if (checkSequence(type, member)) {
+                member = onCallMap.get(type).getNextOnCall();
+            }
+
             onCall.add(member.toString());
+            repository.updateLastMember(member);
         }
         return onCall;
+    }
+
+    private boolean checkSequence(Type type, Member member) {
+        Member lastMember = repository.getLastMember();
+        if (member.equals(lastMember)) {
+            repository.saveSkipMember(type, member);
+            return true;
+        }
+        return false;
     }
 
     public void reset() {

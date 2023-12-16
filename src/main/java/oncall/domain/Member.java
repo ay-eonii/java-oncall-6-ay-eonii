@@ -17,6 +17,14 @@ public class Member {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        return name.equals(obj.toString());
+    }
+
+    @Override
     public String toString() {
         return name;
     }
