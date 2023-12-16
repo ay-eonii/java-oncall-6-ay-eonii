@@ -1,6 +1,7 @@
 package oncall.domain;
 
 import java.time.Month;
+import java.util.Calendar;
 
 public class Schedule {
     private final Month month;
@@ -9,6 +10,12 @@ public class Schedule {
     public Schedule(Month month, DayOfWeek dayOfWeek) {
         this.month = month;
         this.dayOfWeek = dayOfWeek;
+    }
+
+    public int calculateActualMaximum() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(2023, month.getValue() - 1, 1);
+        return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
     public Month getMonth() {

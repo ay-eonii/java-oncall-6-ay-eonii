@@ -5,7 +5,10 @@ import oncall.domain.*;
 import oncall.domain.repository.OnCallRepository;
 
 import java.time.Month;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class OnCallService {
     private static final String DATE_FORMAT = "%s월 %s일 %s";
@@ -16,14 +19,11 @@ public class OnCallService {
     public List<String> getDate(Schedule schedule) {
         Month month = schedule.getMonth();
         DayOfWeek dayOfWeek = schedule.getDayOfWeek();
+        int maximumDate = schedule.calculateActualMaximum();
+
         repository.save(dayOfWeek);
-
-        Calendar cal = Calendar.getInstance();
-        cal.set(2023, month.getValue() - 1, 1);
-        int calActualMaximum = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-
         List<String> dates = new ArrayList<>();
-        while (repository.getLastDay() <= calActualMaximum) {
+        while (repository.getLastDay() <= maximumDate) {
             int lastDay = repository.getLastDay();
             DayOfWeek lastDayOfWeek = repository.getLastDayOfWeek();
             String date = String.format(DATE_FORMAT, month.getValue(), lastDay, lastDayOfWeek.toString());
